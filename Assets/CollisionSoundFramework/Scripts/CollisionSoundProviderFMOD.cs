@@ -61,18 +61,29 @@ namespace CollisionSoundFramework
 
         }
 
-        public override void Play(string materialA, string materialB, Vector3 position, float impactVolume)
+        public override void Play(CollisionSoundObject soundObjectA, CollisionSoundObject soundObjectB, Vector3 position, float impactVolume)
         {
-            if (string.IsNullOrEmpty(material))
+            if (soundObjectA == null || string.IsNullOrEmpty(soundObjectA.Material) || soundObjectB == null || string.IsNullOrEmpty(soundObjectB.Material))
                 return;
 
-            System.Guid playGuid = EventGuids[material];
+            {
+                System.Guid playGuid = EventGuids[soundObjectA.Material];
             
-            EventInstance collidingInstance = RuntimeManager.CreateInstance(playGuid);
-            collidingInstance.set3DAttributes(RuntimeUtils.To3DAttributes(position));
-            collidingInstance.setVolume(impactVolume);
-            collidingInstance.start();
-            collidingInstance.release();
+                EventInstance collidingInstance = RuntimeManager.CreateInstance(playGuid);
+                collidingInstance.set3DAttributes(RuntimeUtils.To3DAttributes(position));
+                collidingInstance.setVolume(impactVolume);
+                collidingInstance.start();
+                collidingInstance.release();
+            }
+            {
+                System.Guid playGuid = EventGuids[soundObjectB.Material];
+            
+                EventInstance collidingInstance = RuntimeManager.CreateInstance(playGuid);
+                collidingInstance.set3DAttributes(RuntimeUtils.To3DAttributes(position));
+                collidingInstance.setVolume(impactVolume);
+                collidingInstance.start();
+                collidingInstance.release();
+            }
         }
     }
 }
