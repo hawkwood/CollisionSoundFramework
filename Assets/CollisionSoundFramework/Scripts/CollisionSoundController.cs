@@ -78,7 +78,13 @@ namespace CollisionSoundFramework
         {
             if (Instance.Provider == null) return;
 
-            if (string.CompareOrdinal(soundObjectA.Material, soundObjectB.Material) > 0)
+            if ((soundObjectA == null || string.IsNullOrEmpty(soundObjectA.Material)) && (soundObjectB == null || string.IsNullOrEmpty(soundObjectB.Material)))
+            {
+                // Debug.Log("IGNORED, neither soundObject is noisy");
+                return;
+            }
+
+            if (soundObjectB == null || (soundObjectA != null && string.CompareOrdinal(soundObjectA.Material, soundObjectB.Material) > 0))
             {
                 CollisionSoundObject t = soundObjectA;
                 soundObjectA = soundObjectB;

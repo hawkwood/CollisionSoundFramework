@@ -84,6 +84,7 @@ namespace CollisionSoundFramework
 
                 CollisionSoundController.Play(this, collisionSoundObject, collision.contacts[0].point, volume);
             }
+            // TODO: allow sending a null
         }
 
         // TODO: track collision points to fire additional sounds when objects move, or attenuate sound if collision persists

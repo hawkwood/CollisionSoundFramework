@@ -107,13 +107,17 @@ namespace CollisionSoundFramework
 
         public override void Play(CollisionSoundObject soundObjectA, CollisionSoundObject soundObjectB, Vector3 position, float impactVolume)
         {
-            if (soundObjectA == null || string.IsNullOrEmpty(soundObjectA.Material) || soundObjectB == null || string.IsNullOrEmpty(soundObjectB.Material))
-                return;
+            if (soundObjectA != null && !string.IsNullOrEmpty(soundObjectA.Material))
+            {
+                Play(soundObjectA.Material, position, impactVolume, Pitch(soundObjectA));
+                soundObjectA.DidPlaySound();
+            }
 
-            Play(soundObjectA.Material, position, impactVolume, Pitch(soundObjectA));
-            soundObjectA.DidPlaySound();
-            Play(soundObjectB.Material, position, impactVolume, Pitch(soundObjectB));
-            soundObjectB.DidPlaySound();
+            if (soundObjectB != null && !string.IsNullOrEmpty(soundObjectB.Material))
+            {
+                Play(soundObjectB.Material, position, impactVolume, Pitch(soundObjectB));
+                soundObjectB.DidPlaySound();
+            }
         }
 
         private float Pitch(CollisionSoundObject soundObject)
