@@ -91,13 +91,20 @@ namespace CollisionSoundFramework
                 soundObjectB = t;
             }
 
-            if (soundObjectA.BlockPlayback || soundObjectB.BlockPlayback)
+            if ((soundObjectA != null && soundObjectA.BlockPlayback) || soundObjectB.BlockPlayback)
             {
                 // Debug.Log("BLOCKED playing sound by soundObject");
                 return;
             }
 
-            CollisionSoundSet soundSet = new CollisionSoundSet { material0 = soundObjectA.Material, material1 = soundObjectB.Material, position = position, impactVolume = impactVolume };
+            CollisionSoundSet soundSet = new CollisionSoundSet
+            {
+                material0 = soundObjectA != null ? soundObjectA.Material : "",
+                material1 = soundObjectB.Material,
+                position = position,
+                impactVolume = impactVolume
+            };
+
             if (Instance.soundSetsThisFrame.IndexOf(soundSet) >= 0)
             {
                 // Debug.Log("BLOCKED playing sound, already playing");

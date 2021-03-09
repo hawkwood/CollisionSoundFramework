@@ -53,6 +53,16 @@ namespace CollisionSoundFramework
             }
         }
 
+        private void OnEnable()
+        {
+            
+        }
+
+        private void OnDisable()
+        {
+            
+        }
+
         protected virtual void OnDestroy()
         {
             Colliders = this.GetComponentsInChildren<Collider>(true);
@@ -70,21 +80,23 @@ namespace CollisionSoundFramework
 
         protected virtual void OnCollisionEnter(Collision collision)
         {
-            Collider collider = collision.collider;
-            if (SoundObjects.ContainsKey(collider))
+            if (!isActiveAndEnabled) return;
+
+            float volume = CalculateImpactVolume(collision);
+            if (volume < CollisionSoundController.Instance.MinCollisionVolume)
             {
-                CollisionSoundObject collisionSoundObject = SoundObjects[collider];
-
-                float volume = CalculateImpactVolume(collision);
-                if (volume < CollisionSoundController.Instance.MinCollisionVolume)
-                {
-                    //Debug.Log("Volume too low to play: " + Volume);
-                    return;
-                }
-
-                CollisionSoundController.Play(this, collisionSoundObject, collision.contacts[0].point, volume);
+                //Debug.Log("Volume too low to play: " + Volume);
+                return;
             }
-            // TODO: allow sending a null
+
+            CollisionSoundObject collisionSoundObject = null;
+            Collider collider = collision.collider;
+            if (SoundObjects.ContainsKey(collider) && SoundObjects[collider].isActiveAndEnabled)
+            {
+                collisionSoundObject = SoundObjects[collider];
+            }
+
+            CollisionSoundController.Play(this, collisionSoundObject, collision.contacts[0].point, volume);
         }
 
         // TODO: track collision points to fire additional sounds when objects move, or attenuate sound if collision persists
